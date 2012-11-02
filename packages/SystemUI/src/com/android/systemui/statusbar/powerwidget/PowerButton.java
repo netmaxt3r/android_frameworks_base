@@ -13,11 +13,16 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.Vibrator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.android.systemui.R;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +56,7 @@ public abstract class PowerButton {
     public static final String BUTTON_MEDIA_NEXT = "toggleMediaNext";
     public static final String BUTTON_LTE = "toggleLte";
     public static final String BUTTON_WIMAX = "toggleWimax";
+    public static final String BUTTON_FCHARGE = "toggleFastCharge";
     public static final String BUTTON_UNKNOWN = "unknown";
     private static final String SEPARATOR = "OV=I=XseparatorX=I=VO";
     private static final Mode MASK_MODE = Mode.SCREEN;
@@ -190,5 +196,37 @@ public abstract class PowerButton {
 
     protected SharedPreferences getPreferences(Context context) {
         return context.getSharedPreferences("PowerButton-" + mType, Context.MODE_PRIVATE);
+    }
+    public static String fileReadOneLine(String fname) {
+        BufferedReader br;
+        String line = null;
+
+        try {
+            br = new BufferedReader(new FileReader(fname), 512);
+            try {
+                line = br.readLine();
+            } finally {
+                br.close();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "IO Exception when reading /sys/ file", e);
+        }
+        return line;
+    }
+
+    public static boolean fileWriteOneLine(String fname, String value) {
+        try {
+            FileWriter fw = new FileWriter(fname);
+            try {
+                fw.write(value);
+            } finally {
+                fw.close();
+            }
+        } catch (IOException e) {
+            String Error = "Error writing to " + fname + ". Exception: ";
+            Log.e(TAG, Error, e);
+            return false;
+        }
+        return true;
     }
 }

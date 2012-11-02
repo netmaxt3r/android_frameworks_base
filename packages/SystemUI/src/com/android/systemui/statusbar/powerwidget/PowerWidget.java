@@ -92,6 +92,7 @@ public class PowerWidget extends FrameLayout {
         sPossibleButtons.put(PowerButton.BUTTON_MEDIA_NEXT, MediaNextButton.class);
         sPossibleButtons.put(PowerButton.BUTTON_WIMAX, WimaxButton.class);
         sPossibleButtons.put(PowerButton.BUTTON_LTE, LTEButton.class);
+        sPossibleButtons.put(PowerButton.BUTTON_FCHARGE, FChargeButton.class);
     }
 
     // this is a list of our currently loaded buttons
